@@ -5,17 +5,17 @@ const ejs = require('ejs'); // Express middleware - Pass data to HTML
 const favicon = require('serve-favicon'); // Enables favicon
 
 // Local files
-const fH = require('./fileHandler');
-const aH = require('./argvHandler');
-const tH = require('./timeoutHandler');
-const rH = require('./responseHandler');
-const systemStrings = require('./systemStrings.json');
-const tools = require('./generalTools');
+const fH = require('./js/fileHandler');
+const aH = require('./js/argvHandler');
+const tH = require('./js/timeoutHandler');
+const rH = require('./js/responseHandler');
+const systemStrings = require('./json/systemStrings.json');
+const tools = require('./js/generalTools');
 
 const app = express();
 
 // System variables
-const argv = aH.processArgv(process.argv);
+const argv = aH.processArgv(process.argv, systemStrings.helpText);
 const ip = argv.ip;
 const port = argv.port;
 const uploadDir = argv.uploadDir;

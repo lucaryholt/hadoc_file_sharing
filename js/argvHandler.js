@@ -1,8 +1,5 @@
-const systemStrings = require('./systemStrings.json');
-const tools = require('./generalTools');
-
 module.exports = {
-    processArgv: function (argv){
+    processArgv: function (argv, helpText){
         let uploadDir = './uploads/';
         let ip = 'localhost:8080';
         let port = 8080;
@@ -11,8 +8,7 @@ module.exports = {
         let showValues = false;
 
         if(argv.indexOf('--help') !== -1){
-            tools.printLogo();
-            console.log(systemStrings.helpText);
+            console.log(helpText);
             process.exit(1);
         }
 

@@ -1,4 +1,4 @@
-const systemStrings = require('./systemStrings.json');
+const systemStrings = require('../json/systemStrings.json');
 
 module.exports = {
     printLogo: function (){
