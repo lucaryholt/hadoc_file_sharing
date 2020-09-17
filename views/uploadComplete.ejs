@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>hadoc.xyz</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.min.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	<body>
+
+		<!-- Header -->
+			<header id="header">
+				<h1><strong><a href="http://<%= ip %>">hadoc</a></strong>.xyz</h1>
+			</header>
+
+			<!--<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>-->
+
+			<!-- Main -->
+				<section id="main" class="wrapper">
+					<div class="container">
+						<header class="major special">
+							<h2>Upload Completed!</h2>
+							<p>Files and sharelink below</p>
+							<p>Expires <%= timeoutText %></p>
+
+							<section>
+								<ul>
+									<% files.forEach(function(file) { %>
+										<li><%= file.name %></li>
+									<% }); %>
+								</ul>
+							</section>
+
+							<p>
+									Sharelink here:
+									<a href="http://<%= shareLink %>"><%= shareLink %></a>
+							</p>
+						</header>
+					</div>
+				</section>
+
+	</body>
+</html>
