@@ -22,7 +22,6 @@ module.exports = {
         let fileData = [];
 
         try{
-            console.log(files.size);
             if(files.length === undefined){
                 let file = files;
 
