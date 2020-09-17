@@ -10,6 +10,7 @@ const aH = require('./argvHandler');
 const tH = require('./timeoutHandler');
 const rH = require('./responseHandler');
 const systemStrings = require('./systemStrings.json');
+const tools = require('./generalTools');
 
 const app = express();
 
@@ -118,6 +119,8 @@ app.post('/upload', async(req, res) => {
 app.listen(port, (error) => {
     if(error){
         console.log('Error starting server.');
+    }else{
+        tools.printLogo();
+        console.log('Server started on port: ', port);
     }
-    console.log('Server started on port: ', port);
 });

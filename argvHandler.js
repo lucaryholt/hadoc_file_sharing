@@ -1,4 +1,5 @@
-// Handles command line arguments
+const systemStrings = require('./systemStrings.json');
+const tools = require('./generalTools');
 
 module.exports = {
     processArgv: function (argv){
@@ -6,6 +7,12 @@ module.exports = {
         let ip = 'localhost:8080';
         let port = 8080;
         let maxSize = 14;
+
+        if(argv.indexOf('--help') !== -1){
+            tools.printLogo();
+            console.log(systemStrings.helpText);
+            process.exit(1);
+        }
 
         const dirIndex = argv.indexOf('--dir');
         if(dirIndex !== -1 && argv.length > dirIndex + 1){
