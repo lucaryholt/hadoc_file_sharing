@@ -1,27 +1,30 @@
 const express = require('express');
-const fileUpload = require('express-fileupload'); //The library that enables file upload
-const uuid = require('uuid'); //makes unique id, so that we get no upload conflicts
-const ejs = require('ejs'); //thymeleaf type library
-const favicon = require('serve-favicon'); //favicon
+const fileUpload = require('express-fileupload'); // Express middleware - Enables file upload
+const uuid = require('uuid'); // Generates unique ID's
+const ejs = require('ejs'); // Express middleware - Pass data to HTML
+const favicon = require('serve-favicon'); // Enables favicon
 
+// Local files
 const fH = require('./fileHandler');
 const aH = require('./argvHandler');
 const tH = require('./timeoutHandler');
+const rH = require('./responseHandler');
+const systemStrings = require('./systemStrings.json');
 
 const app = express();
 
+// System variables
 const argv = aH.processArgv(process.argv);
 const ip = argv.ip;
 const port = argv.port;
 const uploadDir = argv.uploadDir;
+const maxSize = argv.maxSize;
 const timeout = 3600000;
 
+// Starts service that checks upload timeout
 tH.checkTimeout(uploadDir, timeout, tH.checkTimeout);
 
-//TODO ability to download all files as zip on download page
-//TODO max size for download
-
-//Here we enable file upload
+// Enables file upload
 app.use(fileUpload({
     createParentPath: true,
     safeFileNames: true,
@@ -30,7 +33,7 @@ app.use(fileUpload({
 
 app.use(favicon(__dirname + '/views/favicon.ico'));
 app.use(express.static('views'));
-app.use(express.json()); //Helps to read body from request
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
@@ -60,11 +63,8 @@ app.get('/s/:id', (req, res) => {
             });
         }
     }catch (error){
-        console.log(error);
+        return rH.errorPage(res, systemStrings.errorDownloadExpired, ip);
     }
-    //TODO Handle error in better way for client
-    //'The download is timed out' maybe
-    return res.status(400).send({ error: 'No such id.' });
 });
 
 app.get('/download/:id/:name', (req, res) => {
@@ -74,37 +74,41 @@ app.get('/download/:id/:name', (req, res) => {
     try{
         if(id != null && name != null){
             const file = uploadDir + id + '/' + name;
-            return res.download(file);
+            if(fH.fileExists(file)){
+                return res.download(file);
+            }
+
         }
     }catch (error){
         console.log(error);
     }
-    //TODO Handle error in better way for client
-    //'The download is timed out' maybe
-    return res.status(400).send({ error: 'No such file.' });
+    return rH.errorPage(res, systemStrings.errorDownloadExpired, ip);
 });
 
 app.post('/upload', async(req, res) => {
     const timeStamp = new Date().getTime();
+    const id = uuid.v4() + timeStamp;
     const timeoutDate = new Date(timeStamp + timeout);
     const timeoutText = timeoutDate.getHours() + ':' + timeoutDate.getMinutes();
-    const id = uuid.v4() + timeStamp;
     const directory = uploadDir + id +  '/';
 
     try{
         if(!req.files){
             return res.redirect('/');
         } else {
-            let fileData = fH.moveFiles(req.files.files, directory, (file, path) => {
+            let fileData = fH.moveFiles(req.files.files, directory, maxSize, (file, path) => {
                 file.mv(path);
             });
 
-            return res.render('uploadComplete',{
-                files: fileData,
-                shareLink: ip + '/s/' + id,
-                ip,
-                timeoutText
-            });
+            if(fileData.length !== 0){
+                return res.render('uploadComplete',{
+                    files: fileData,
+                    shareLink: ip + '/s/' + id,
+                    ip,
+                    timeoutText
+                });
+            }
+            return rH.errorPage(res, systemStrings.errorFileSize, ip);
         }
     }catch (error){
         return res.status(500).send(error);

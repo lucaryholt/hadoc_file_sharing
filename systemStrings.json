@@ -1,0 +1,4 @@
+{
+  "errorFileSize" : "Could not upload file. Filesize (4 mb) might be exceeded.",
+  "errorDownloadExpired" : "Could not download file. Files expired."
+}

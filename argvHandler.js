@@ -1,8 +1,11 @@
+// Handles command line arguments
+
 module.exports = {
     processArgv: function (argv){
         let uploadDir = './uploads/';
         let ip = 'localhost:8080';
         let port = 8080;
+        let maxSize = 14;
 
         const dirIndex = argv.indexOf('--dir');
         if(dirIndex !== -1 && argv.length > dirIndex + 1){
@@ -19,14 +22,21 @@ module.exports = {
             port = Number(argv[portIndex + 1]);
         }
 
+        const mxIndex = argv.indexOf('--mxSize');
+        if(mxIndex !== -1 && argv.length > mxIndex + 1){
+            maxSize = Number(argv[mxIndex + 1]);
+        }
+
         console.log('Upload directory: ', uploadDir);
         console.log('IP: ', ip);
         console.log('Port: ', port);
+        console.log('Max file size: ',maxSize);
 
         return {
             uploadDir,
             ip,
-            port
+            port,
+            maxSize
         };
     }
 }

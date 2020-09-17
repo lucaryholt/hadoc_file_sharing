@@ -1,3 +1,5 @@
+// Handles file timeout
+
 const fH = require('./fileHandler');
 
 module.exports = {
@@ -9,7 +11,7 @@ module.exports = {
                 const dirTime = Number(directories[i].slice(36));
                 if(currentTime - dirTime > timeout){
                     console.log('dir: ' + directories[i] + ' is too old!');
-                    fH.deleteDir(uploadDir + directories[i]);
+                    fH.deleteDirectory(uploadDir + directories[i]);
                 }
             }
         }

@@ -1,6 +1,6 @@
-const fs = require('fs'); //file methods, used to read contents of directory
-const _ = require('lodash'); //array methods
-const AdmZip = require('adm-zip'); //create zip files
+const fs = require('fs'); // File methods
+const _ = require('lodash'); // Array methods
+const AdmZip = require('adm-zip'); // Creates zip files
 
 module.exports = {
     readDirectory: function (path){
@@ -18,14 +18,19 @@ module.exports = {
 
         return resBody;
     },
-    moveFiles: function (files, directory, callback){
+    moveFiles: function (files, directory, maxSize, callback){
         let fileData = [];
 
         try{
+            console.log(files.size);
             if(files.length === undefined){
                 let file = files;
 
-                callback(file, directory + file.name);
+                if(file.size < maxSize * 1024 * 1024){
+                    callback(file, directory + file.name);
+                }else{
+                    return [];
+                }
 
                 fileData.push({
                     name: file.name
@@ -35,7 +40,11 @@ module.exports = {
 
                     let file = files[key];
 
-                    callback(file, directory + file.name);
+                    if(file.size < maxSize * 1024 * 1024){
+                        callback(file, directory + file.name);
+                    }else{
+                        return [];
+                    }
 
                     fileData.push({
                         name: file.name
@@ -48,7 +57,7 @@ module.exports = {
 
         return fileData;
     },
-    deleteDir: function (dir){
+    deleteDirectory: function (dir){
         fs.rmdir(dir, { recursive : true}, (error) => {
             if(error){
                 console.log('error deleting', dir);
