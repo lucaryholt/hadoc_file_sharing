@@ -8,6 +8,8 @@ module.exports = {
         let port = 8080;
         let maxSize = 14;
 
+        let showValues = false;
+
         if(argv.indexOf('--help') !== -1){
             tools.printLogo();
             console.log(systemStrings.helpText);
@@ -34,10 +36,17 @@ module.exports = {
             maxSize = Number(argv[mxIndex + 1]);
         }
 
-        console.log('Upload directory: ', uploadDir);
-        console.log('IP: ', ip);
-        console.log('Port: ', port);
-        console.log('Max file size: ',maxSize);
+        const sVIndex = argv.indexOf('--sV');
+        if(sVIndex !== -1){
+            showValues = true;
+        }
+
+        if(showValues){
+            console.log('Upload directory: ', uploadDir);
+            console.log('IP: ', ip);
+            console.log('Port: ', port);
+            console.log('Max file size: ',maxSize);
+        }
 
         return {
             uploadDir,
