@@ -90,7 +90,7 @@ app.post('/upload', async(req, res) => {
     const timeStamp = new Date().getTime();
     const id = uuid.v4() + timeStamp;
     const timeoutDate = new Date(timeStamp + timeout);
-    const timeoutText = timeoutDate.getHours() + ':' + timeoutDate.getMinutes();
+    const timeoutText = tools.getTimeString(timeoutDate);
     const directory = uploadDir + id +  '/';
 
     try{
