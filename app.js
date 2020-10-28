@@ -1,5 +1,4 @@
-const express = require('express');
-const fileUpload = require('express-fileupload'); // Express middleware - Enables file upload
+const express = require('express');const fileUpload = require('express-fileupload'); // Express middleware - Enables file upload
 const uuid = require('uuid'); // Generates unique ID's
 const ejs = require('ejs'); // Express middleware - Pass data to HTML
 const favicon = require('serve-favicon'); // Enables favicon
@@ -31,6 +30,8 @@ app.use(fileUpload({
     safeFileNames: true,
     preserveExtension: 6
 }));
+
+//TODO instead of ejs, change to public folder and just html+jquery
 
 app.use(favicon(__dirname + '/views/favicon.ico'));
 app.use(express.static('views'));
